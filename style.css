@@ -174,8 +174,8 @@ body, body * {
   color: #35aaff;
 }
 .logo {
-  width: 110px;
-  height: 110px;
+  width: 210px;
+  height: 210px;
   object-fit: contain;
   border-radius: 15px;
   filter: drop-shadow(0 0 12px #168cff);
