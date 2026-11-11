@@ -173,3 +173,17 @@ body, body * {
   margin-top: 15px;
   color: #35aaff;
 }
+.logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 15px;
+  filter: drop-shadow(0 0 12px #168cff);
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 20px #8a2be2);
+}
