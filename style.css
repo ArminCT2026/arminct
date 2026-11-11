@@ -128,3 +128,48 @@ body, body * {
   background: #0066cc;
   transform: scale(1.05);
 }
+#game-center {
+  text-align: center;
+  padding: 50px 20px;
+  margin: 40px auto;
+  max-width: 900px;
+}
+
+#game-center h2 {
+  color: #35aaff;
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+#game-center > p {
+  color: white;
+  margin-bottom: 30px;
+}
+
+.game-card {
+  display: block;
+  max-width: 350px;
+  margin: auto;
+  padding: 25px;
+  background: linear-gradient(135deg, #101d3a, #071126);
+  border: 1px solid #168cff;
+  border-radius: 18px;
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.game-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 20px rgba(22, 140, 255, 0.3);
+}
+
+.game-card h3 {
+  color: #35aaff;
+}
+
+.game-card span {
+  display: inline-block;
+  margin-top: 15px;
+  color: #35aaff;
+}
