@@ -185,22 +185,19 @@ function play(player) {
 
   if (player === computer) {
     result = 'مساوی شدیم! 😐';
-  }
-  else if (
+  } else if (
     (player === 'سنگ' && computer === 'قیچی') ||
     (player === 'کاغذ' && computer === 'سنگ') ||
     (player === 'قیچی' && computer === 'کاغذ')
   ) {
     result = 'تو برنده شدی! 🏆';
     playerScore++;
-  }
-  else {
+  } else {
     result = 'کامپیوتر برنده شد! 🤖';
     computerScore++;
   }
 
   const resultBox = document.getElementById('result');
-
   resultBox.innerText = result;
   resultBox.classList.remove('win-animation');
 
@@ -213,9 +210,7 @@ function play(player) {
       particle.className = 'confetti';
       particle.innerText = '🎉';
       particle.style.left = Math.random() * 100 + 'vw';
-
       document.body.appendChild(particle);
-
       setTimeout(() => particle.remove(), 1500);
     }
   }
@@ -224,26 +219,19 @@ function play(player) {
     'تو: ' + playerScore +
     ' | کامپیوتر: ' + computerScore;
 
-  if (playerScore === 5 || computerScore === 5) {
+  if (playerScore >= 5 || computerScore >= 5) {
     gameOver = true;
 
     const champion = document.getElementById('champion');
 
-    if (playerScore === 5) {
+    if (champion) {
       champion.innerHTML = 
         <div class="trophy">🏆</div>
-        <h2>قهرمان Armin CT</h2>
-        <p>تو این مسابقه رو بردی! 👑</p>
+        <h2>${playerScore >= 5 ? 'قهرمان Armin CT' : 'قهرمان کامپیوتر!'}</h2>
+        <p>${playerScore >= 5 ? 'تو این مسابقه رو بردی! 👑' : 'این بار کامپیوتر برنده شد!'}</p>
       ;
-    } else {
-      champion.innerHTML = 
-        <div class="trophy">🏆</div>
-        <h2>قهرمان کامپیوتر!</h2>
-        <p>این بار کامپیوتر برنده شد!</p>
-      ;
+      champion.classList.remove('hidden');
     }
-
-    champion.classList.remove('hidden');
   }
 }
 
@@ -263,7 +251,11 @@ function resetGame() {
   document.getElementById('score').innerText =
     'تو: ۰ | کامپیوتر: ۰';
 
-  document.getElementById('champion').classList.add('hidden');
-  document.getElementById('champion').innerHTML = '';
+  const champion = document.getElementById('champion');
+
+  if (champion) {
+    champion.classList.add('hidden');
+    champion.innerHTML = '';
+  }
 }
 </script>
