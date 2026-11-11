@@ -171,44 +171,21 @@ text-shadow: 0 0 25px #168cff;
 let playerScore = 0;
 let computerScore = 0;
 let gameOver = false;
-  
-function play(player) {
-if (gameOver) {
-    return;
-  } 
-  const options = ['سنگ', 'کاغذ', 'قیچی'];
 
+function play(player) {
+  if (gameOver) return;
+
+  const options = ['سنگ', 'کاغذ', 'قیچی'];
   const computer = options[Math.floor(Math.random() * 3)];
 
   document.getElementById('computer').innerText =
     'انتخاب کامپیوتر: ' + computer;
-if (playerScore === 5 || computerScore === 5) {
-  gameOver = true;
 
-  const champion = document.getElementById('champion');
-
-  if (playerScore === 5) {
-    champion.innerHTML = 
-      <div class="trophy">🏆</div>
-      <h2>قهرمان Armin CT</h2>
-      <p>تو این مسابقه رو بردی! 👑</p>
-    ;
-  } else {
-    champion.innerHTML = 
-      <div class="trophy">🏆</div>
-      <h2>قهرمان کامپیوتر!</h2>
-      <p>این بار کامپیوتر برنده شد!</p>
-    ;
-  }
-
-  champion.classList.remove('hidden');
-}
-  
   let result = '';
 
   if (player === computer) {
     result = 'مساوی شدیم! 😐';
-  } 
+  }
   else if (
     (player === 'سنگ' && computer === 'قیچی') ||
     (player === 'کاغذ' && computer === 'سنگ') ||
@@ -216,7 +193,7 @@ if (playerScore === 5 || computerScore === 5) {
   ) {
     result = 'تو برنده شدی! 🏆';
     playerScore++;
-  } 
+  }
   else {
     result = 'کامپیوتر برنده شد! 🤖';
     computerScore++;
@@ -233,7 +210,6 @@ if (playerScore === 5 || computerScore === 5) {
 
     for (let i = 0; i < 25; i++) {
       const particle = document.createElement('div');
-
       particle.className = 'confetti';
       particle.innerText = '🎉';
       particle.style.left = Math.random() * 100 + 'vw';
@@ -247,15 +223,35 @@ if (playerScore === 5 || computerScore === 5) {
   document.getElementById('score').innerText =
     'تو: ' + playerScore +
     ' | کامپیوتر: ' + computerScore;
+
+  if (playerScore === 5 || computerScore === 5) {
+    gameOver = true;
+
+    const champion = document.getElementById('champion');
+
+    if (playerScore === 5) {
+      champion.innerHTML = 
+        <div class="trophy">🏆</div>
+        <h2>قهرمان Armin CT</h2>
+        <p>تو این مسابقه رو بردی! 👑</p>
+      ;
+    } else {
+      champion.innerHTML = 
+        <div class="trophy">🏆</div>
+        <h2>قهرمان کامپیوتر!</h2>
+        <p>این بار کامپیوتر برنده شد!</p>
+      ;
+    }
+
+    champion.classList.remove('hidden');
+  }
 }
 
 function resetGame() {
   playerScore = 0;
   computerScore = 0;
-gameOver = false;
+  gameOver = false;
 
-document.getElementById('champion').classList.add('hidden');
-  
   document.getElementById('computer').innerText =
     'انتخاب کامپیوتر: ؟';
 
@@ -266,5 +262,8 @@ document.getElementById('champion').classList.add('hidden');
 
   document.getElementById('score').innerText =
     'تو: ۰ | کامپیوتر: ۰';
+
+  document.getElementById('champion').classList.add('hidden');
+  document.getElementById('champion').innerHTML = '';
 }
 </script>
