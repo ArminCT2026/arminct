@@ -103,6 +103,41 @@ text-shadow: 0 0 25px #168cff;
   animation: celebration 1.5s ease-out forwards;
   z-index: 999;
 }
+.hidden {
+  display: none;
+}
+
+#champion {
+  margin: 35px auto;
+  padding: 25px;
+  border: 2px solid gold;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #302000, #705000);
+  box-shadow: 0 0 35px gold;
+  animation: trophyAppear 1s ease-out;
+}
+
+.trophy {
+  font-size: 120px;
+  filter: drop-shadow(0 0 20px gold);
+}
+
+#champion h2 {
+  color: gold;
+  font-size: 30px;
+  text-shadow: 0 0 15px gold;
+}
+
+@keyframes trophyAppear {
+  from {
+    transform: translateY(180px) scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+} 
   </style>
 </head>
 
@@ -124,7 +159,8 @@ text-shadow: 0 0 25px #168cff;
     <div id="result">منتظر انتخاب تو هستم!</div>
 
     <h3 id="score">تو: ۰ | کامپیوتر: ۰</h3>
-
+<div id="champion" class="hidden"></div>
+    
     <button onclick="resetGame()">شروع دوباره</button>
 
     <br><br>
@@ -134,15 +170,40 @@ text-shadow: 0 0 25px #168cff;
 <script>
 let playerScore = 0;
 let computerScore = 0;
-
+let gameOver = false;
+  
 function play(player) {
+if (gameOver) {
+    return;
+  } 
   const options = ['سنگ', 'کاغذ', 'قیچی'];
 
   const computer = options[Math.floor(Math.random() * 3)];
 
   document.getElementById('computer').innerText =
     'انتخاب کامپیوتر: ' + computer;
+if (playerScore === 5 || computerScore === 5) {
+  gameOver = true;
 
+  const champion = document.getElementById('champion');
+
+  if (playerScore === 5) {
+    champion.innerHTML = 
+      <div class="trophy">🏆</div>
+      <h2>قهرمان Armin CT</h2>
+      <p>تو این مسابقه رو بردی! 👑</p>
+    ;
+  } else {
+    champion.innerHTML = 
+      <div class="trophy">🏆</div>
+      <h2>قهرمان کامپیوتر!</h2>
+      <p>این بار کامپیوتر برنده شد!</p>
+    ;
+  }
+
+  champion.classList.remove('hidden');
+}
+  
   let result = '';
 
   if (player === computer) {
@@ -191,7 +252,10 @@ function play(player) {
 function resetGame() {
   playerScore = 0;
   computerScore = 0;
+gameOver = false;
 
+document.getElementById('champion').classList.add('hidden');
+  
   document.getElementById('computer').innerText =
     'انتخاب کامپیوتر: ؟';
 
