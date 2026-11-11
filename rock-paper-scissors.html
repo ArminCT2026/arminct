@@ -1,93 +1,301 @@
-} else if (
-        (player === 'سنگ' && computer === 'قیچی') ||
-        (player === 'کاغذ' && computer === 'سنگ') ||
-        (player === 'قیچی' && computer === 'کاغذ')
-      ) {
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rock Paper Scissors | Armin CT</title>
 
-        result = 'تو برنده شدی! 🏆';
-        playerScore++;
+<style>
+* {
+  box-sizing: border-box;
+}
 
-      } else {
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 25px 15px;
+  font-family: Tahoma, sans-serif;
+  color: white;
+  text-align: center;
+  background: linear-gradient(135deg, #050b1c, #101d3a);
+}
 
-        result = 'کامپیوتر برنده شد! 🤖';
-        computerScore++;
+.container {
+  max-width: 650px;
+  margin: 35px auto;
+  padding: 30px 20px;
+  border: 1px solid #168cff;
+  border-radius: 24px;
+  background: rgba(10, 25, 55, 0.85);
+  box-shadow: 0 0 30px rgba(22, 140, 255, 0.2);
+}
 
-      }
+h1 {
+  color: #35aaff;
+  text-shadow: 0 0 15px #168cff;
+}
 
-      const resultBox = document.getElementById('result');
+.subtitle {
+  color: #b9d9ff;
+  line-height: 2;
+}
 
-      resultBox.innerText = result;
-      resultBox.classList.remove('win-animation');
+.choices {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 30px 0;
+}
 
-      if (result === 'تو برنده شدی! 🏆') {
+.choice {
+  padding: 16px 22px;
+  border: 1px solid #168cff;
+  border-radius: 14px;
+  background: #10264c;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.25s;
+}
 
-        void resultBox.offsetWidth;
-        resultBox.classList.add('win-animation');
+.choice:hover {
+  background: #168cff;
+  transform: translateY(-5px);
+  box-shadow: 0 0 18px #168cff;
+}
 
-        for (let i = 0; i < 25; i++) {
+.display {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 15px;
+  background: #07152d;
+  line-height: 2;
+}
 
-          const particle = document.createElement('div');
+#result {
+  font-size: 21px;
+  font-weight: bold;
+  color: #35aaff;
+}
 
-          particle.className = 'confetti';
-          particle.innerText = '🎉';
+#score {
+  font-size: 20px;
+  color: white;
+}
 
-          particle.style.left =
-            Math.random() * 100 + 'vw';
+.reset {
+  margin-top: 20px;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 12px;
+  background: #168cff;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+}
 
-          document.body.appendChild(particle);
+.reset:hover {
+  background: #0066cc;
+}
 
-          setTimeout(() => {
-            particle.remove();
-          }, 1500);
+.hidden {
+  display: none;
+}
 
-        }
-      }
+#champion {
+  margin-top: 30px;
+  padding: 25px 10px;
+  border: 2px solid #35aaff;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #102b55, #071126);
+  box-shadow: 0 0 30px rgba(22, 140, 255, 0.4);
+  animation: victory 0.8s ease;
+}
 
-      document.getElementById('score').innerText =
-        'تو: ' + playerScore +
-        ' | کامپیوتر: ' + computerScore;
+.trophy {
+  font-size: 100px;
+  animation: trophy 1.5s infinite alternate;
+  filter: drop-shadow(0 0 20px gold);
+}
 
-      if (playerScore >= 5 || computerScore >= 5) {
+#champion h2 {
+  color: #ffd84d;
+  font-size: 28px;
+}
 
-        gameOver = true;
+@keyframes victory {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
-        const champion = document.getElementById('champion');
+@keyframes trophy {
+  from {
+    transform: translateY(0) rotate(-5deg);
+  }
+  to {
+    transform: translateY(-12px) rotate(5deg);
+  }
+}
 
-        champion.innerHTML = 
-          <div class="trophy">🏆</div>
-          <h2>${playerScore >= 5 ? 'قهرمان Armin CT' : 'قهرمان کامپیوتر!'}</h2>
-          <p>${playerScore >= 5 ? 'تو این مسابقه رو بردی! 👑' : 'این بار کامپیوتر برنده شد!'}</p>
-        ;
+.win-animation {
+  animation: victory 0.5s ease;
+  color: #ffd84d !important;
+}
 
-        champion.classList.remove('hidden');
+.footer {
+  margin-top: 30px;
+  color: #779bc7;
+  font-size: 13px;
+}
+</style>
+</head>
 
-      }
+<body>
+
+<div class="container">
+
+  <h1>🎮 سنگ، کاغذ، قیچی</h1>
+
+  <p class="subtitle">
+    به بازی اختصاصی Armin CT خوش اومدی!
+    <br>
+    اولین نفری که به ۵ امتیاز برسه قهرمانه.
+  </p>
+
+  <div class="display">
+    <div id="computer">انتخاب کامپیوتر: ؟</div>
+    <div id="result">منتظر انتخاب تو هستم!</div>
+  </div>
+
+  <div class="choices">
+    <button class="choice" onclick="play('سنگ')">🪨 سنگ</button>
+    <button class="choice" onclick="play('کاغذ')">📄 کاغذ</button>
+    <button class="choice" onclick="play('قیچی')">✂️ قیچی</button>
+  </div>
+
+  <div class="display">
+    <div id="score">تو: ۰ | کامپیوتر: ۰</div>
+  </div>
+
+  <div id="champion" class="hidden"></div>
+
+  <button class="reset" onclick="resetGame()">
+    🔄 شروع دوباره
+  </button>
+
+  <div class="footer">
+    Powered by Armin CT 💙
+  </div>
+
+</div>
+
+<script>
+let playerScore = 0;
+let computerScore = 0;
+let gameOver = false;
+
+function play(player) {
+
+  if (gameOver) return;
+
+  const options = ['سنگ', 'کاغذ', 'قیچی'];
+  const computer = options[
+    Math.floor(Math.random() * 3)
+  ];
+
+  document.getElementById('computer').innerText =
+    'انتخاب کامپیوتر: ' + computer;
+
+  let result = '';
+
+  if (player === computer) {
+
+    result = 'مساوی شد! 🤝';
+
+  } else if (
+    (player === 'سنگ' && computer === 'قیچی') ||
+    (player === 'کاغذ' && computer === 'سنگ') ||
+    (player === 'قیچی' && computer === 'کاغذ')
+  ) {
+
+    result = 'تو برنده شدی! 🏆';
+    playerScore++;
+
+  } else {
+
+    result = 'کامپیوتر برنده شد! 🤖';
+    computerScore++;
+
+  }
+
+  const resultBox = document.getElementById('result');
+resultBox.innerText = result;
+  resultBox.classList.remove('win-animation');
+
+  if (playerScore > 0 && result === 'تو برنده شدی! 🏆') {
+    void resultBox.offsetWidth;
+    resultBox.classList.add('win-animation');
+  }
+
+  document.getElementById('score').innerText =
+    'تو: ' + playerScore +
+    ' | کامپیوتر: ' + computerScore;
+
+  if (playerScore >= 5 || computerScore >= 5) {
+
+    gameOver = true;
+
+    const champion = document.getElementById('champion');
+
+    if (playerScore >= 5) {
+      champion.innerHTML = 
+        <div class="trophy">🏆</div>
+        <h2>قهرمان Armin CT!</h2>
+        <p>تو این مسابقه رو بردی! 👑</p>
+      ;
+    } else {
+      champion.innerHTML = 
+        <div class="trophy">🤖</div>
+        <h2>قهرمان کامپیوتر!</h2>
+        <p>این بار کامپیوتر برنده شد!</p>
+      ;
     }
 
-    function resetGame() {
+    champion.classList.remove('hidden');
+  }
+}
 
-      playerScore = 0;
-      computerScore = 0;
-      gameOver = false;
+function resetGame() {
 
-      document.getElementById('computer').innerText =
-        'انتخاب کامپیوتر: ؟';
+  playerScore = 0;
+  computerScore = 0;
+  gameOver = false;
 
-      document.getElementById('result').innerText =
-        'منتظر انتخاب تو هستم!';
+  document.getElementById('computer').innerText =
+    'انتخاب کامپیوتر: ؟';
 
-      document.getElementById('result').classList.remove('win-animation');
+  document.getElementById('result').innerText =
+    'منتظر انتخاب تو هستم!';
 
-      document.getElementById('score').innerText =
-        'تو: ۰ | کامپیوتر: ۰';
+  document.getElementById('result')
+    .classList.remove('win-animation');
 
-      const champion = document.getElementById('champion');
+  document.getElementById('score').innerText =
+    'تو: ۰ | کامپیوتر: ۰';
 
-      champion.classList.add('hidden');
-      champion.innerHTML = '';
+  const champion = document.getElementById('champion');
 
-    }
-  </script>
+  champion.classList.add('hidden');
+  champion.innerHTML = '';
+}
+</script>
 
 </body>
 </html>
