@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Armin CT | Tic Tac Toe</title>
+<style>
+:root{--blue:#29a8ff;--purple:#9b63ff;--panel:#101a35;--text:#f4f7ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:24px 14px;color:var(--text);font-family:Tahoma,Arial,sans-serif;text-align:center;background:radial-gradient(circle at 15% 15%,#192d58 0,transparent 35%),radial-gradient(circle at 85% 80%,#321b58 0,transparent 34%),linear-gradient(135deg,#050a18,#0a1026 55%,#100b24)}
+.wrap{width:min(100%,620px);margin:auto}
+header{margin:8px 0 22px}
+.logo{font-size:13px;letter-spacing:4px;color:#8bcfff}
+h1{font-size:clamp(28px,6vw,42px);margin:10px 0;color:#fff;text-shadow:0 0 18px #238fff}
+.sub{color:#aebbd7;margin:0}
+.panel{background:linear-gradient(145deg,rgba(20,33,66,.96),rgba(13,17,42,.96));border:1px solid rgba(91,164,255,.42);border-radius:22px;padding:20px;box-shadow:0 15px 45px #0007}
+.label{color:#b9c9e8;margin:0 0 12px}
+.difficulties{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+button{font:inherit;cursor:pointer;border:0}
+.level{padding:10px 18px;border-radius:12px;color:#dceaff;background:#202d4c;border:1px solid #52658c;transition:.2s}
+.level.active{background:linear-gradient(135deg,#087ed5,#6843c9);border-color:#8acaff;box-shadow:0 0 17px #268cff66;color:white}
+.status{min-height:30px;margin:12px 0 16px;color:#d8e7ff;font-size:17px}
+.board{width:min(100%,390px);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;direction:ltr}
+.cell{aspect-ratio:1;background:linear-gradient(145deg,#18264a,#111a35);border:1px solid #49618e;border-radius:17px;color:white;font-size:clamp(42px,12vw,68px);font-weight:bold;display:grid;place-items:center;box-shadow:inset 0 0 18px #0004;transition:transform .15s,border-color .2s}
+.cell:disabled{cursor:default;opacity:1}
+.cell:not(:disabled):hover{transform:scale(1.035);border-color:#55baff;background:#1c3159}
+.cell.x{color:#55c1ff;text-shadow:0 0 18px #159dff}
+.cell.o{color:#c19aff;text-shadow:0 0 18px #a05cff}
+.cell.win{border-color:#ffe17c;box-shadow:0 0 22px #ffc83d88,inset 0 0 18px #ffc83d22;animation:pulse .7s infinite alternate}
+@keyframes pulse{to{transform:scale(1.04)}}
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px auto;max-width:390px}
+.score{padding:11px 5px;border-radius:13px;background:#0b142b;border:1px solid #34476d;color:#b9c9e8;font-size:13px}
+.score strong{display:block;font-size:23px;color:white;margin-top:5px}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+.action{padding:12px 20px;border-radius:12px;background:linear-gradient(135deg,#087ed5,#6042c8);color:white;box-shadow:0 6px 18px #1459ad55}
+.action.secondary{background:#263552;border:1px solid #53688f;box-shadow:none}
+.note{font-size:12px;color:#8798ba;margin:15px 0 0}
+.overlay{position:fixed;inset:0;background:#030713dc;display:none;place-items:center;padding:20px;z-index:5}
+.overlay.show{display:grid}
+.result{position:relative;width:min(100%,430px);padding:28px 20px;border-radius:24px;background:linear-gradient(145deg,#15264b,#17112f);border:1px solid #5b8ed1;box-shadow:0 0 45px #126dce66;overflow:hidden}
+.result h2{font-size:clamp(30px,8vw,46px);margin:8px 0}
+.trophy{font-size:86px;display:block;animation:bounce .8s infinite alternate}
+@keyframes bounce{to{transform:translateY(-10px) rotate(5deg)}}
+.lose-stamp{display:inline-block;color:#ff3838;border:7px double #ff3838;padding:7px 15px;font-weight:900;font-size:clamp(28px,8vw,43px);letter-spacing:3px;transform:rotate(-12deg);text-shadow:0 0 9px #ff242455;box-shadow:0 0 14px #ff242455;margin:16px 0}
+.robot{font-size:83px;display:block;filter:drop-shadow(0 0 13px #9a7cff)}
+.draw-icon{font-size:70px;display:block}
+.result p{color:#d0dcf3}
+.stars{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:6}
+.star{position:absolute;top:-30px;color:#ffe27a;font-size:22px;animation:fall 2.5s linear forwards;text-shadow:0 0 12px #ffd84d}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">A R M I N &nbsp; C T</div>
+  <h1>⭕ بازی دوز | TIC TAC TOE</h1>
+  <p class="sub">با ربات رقابت کن و قهرمان شو!</p>
+</header>
+<main class="panel">
+  <p class="label">درجه سختی ربات رو انتخاب کن:</p>
+  <div class="difficulties" role="group" aria-label="درجه سختی">
+    <button class="level active" data-level="easy" type="button">🟢 آسان</button>
+    <button class="level" data-level="medium" type="button">🟡 متوسط</button>
+    <button class="level" data-level="hard" type="button">🔴 سخت</button>
+  </div>
+  <div class="status" id="status" aria-live="polite">نوبت توئه! تو با X بازی می‌کنی.</div>
+  <div class="board" id="board" aria-label="صفحه بازی دوز">
+    <button class="cell" data-i="0" aria-label="خانه ۱" type="button"></button>
+    <button class="cell" data-i="1" aria-label="خانه ۲" type="button"></button>
+    <button class="cell" data-i="2" aria-label="خانه ۳" type="button"></button>
+    <button class="cell" data-i="3" aria-label="خانه ۴" type="button"></button>
+    <button class="cell" data-i="4" aria-label="خانه ۵" type="button"></button>
+    <button class="cell" data-i="5" aria-label="خانه ۶" type="button"></button>
+    <button class="cell" data-i="6" aria-label="خانه ۷" type="button"></button>
+    <button class="cell" data-i="7" aria-label="خانه ۸" type="button"></button>
+    <button class="cell" data-i="8" aria-label="خانه ۹" type="button"></button>
+  </div>
+  <div class="scores">
+    <div class="score">بردهای تو<strong id="wins">0</strong></div>
+    <div class="score">بردهای ربات<strong id="losses">0</strong></div>
+    <div class="score">مساوی<strong id="draws">0</strong></div>
+  </div>
+  <div class="actions">
+    <button class="action" id="restart" type="button">🔄 بازی دوباره</button>
+    <button class="action secondary" id="resetScores" type="button">پاک کردن امتیازها</button>
+  </div>
+  <p class="note">Armin CT • هر دور با X شروع می‌کنی.</p>
+</main>
+</div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+  <div class="result">
+    <div id="resultArt"></div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <button class="action" id="again" type="button">بازی بعدی</button>
+  </div>
+</div>
+<div class="stars" id="stars"></div>
+<script>
+(() => {
+  const cells = [...document.querySelectorAll('.cell')];
+  const statusEl = document.getElementById('status');
+  const overlay = document.getElementById('overlay');
+  const resultArt = document.getElementById('resultArt');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultText = document.getElementById('resultText');
+  const winsEl = document.getElementById('wins');
+  const lossesEl = document.getElementById('losses');
+  const drawsEl = document.getElementById('draws');
+  const starsEl = document.getElementById('stars');
+  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  let board = Array(9).fill('');
+  let level = 'easy';
+  let busy = false;
+  let finished = false;
+  let scores = {wins:0, losses:0, draws:0};
+
+  function winner(b) {
+    for (const line of lines) {
+      const [a,c,d] = line;
+      if (b[a] && b[a] === b[c] && b[a] === b[d]) return {mark:b[a], line};
+    }
+    return b.every(Boolean) ? {mark:'draw', line:[]} : null;
+  }
+  function render() {
+    cells.forEach((cell,i) => {
+      cell.textContent = board[i];
+      cell.className = 'cell' + (board[i] ? ' ' + board[i].toLowerCase() : '');
+      cell.disabled = Boolean(board[i]) || busy || finished;
+    });
+  }
+  function updateScores() {
+    winsEl.textContent = scores.wins;
+    lossesEl.textContent = scores.losses;
+    drawsEl.textContent = scores.draws;
+  }
+  function endGame(result) {
+    finished = true;
+    busy = false;
+    render();
+    if (result.mark === 'X') {
+      scores.wins++;
+      result.line.forEach(i => cells[i].classList.add('win'));
+      resultArt.innerHTML = '<span class="trophy" aria-label="جام قهرمانی">🏆</span>';
+      resultTitle.textContent = 'YOU WIN!';
+      resultText.textContent = 'آفرین قهرمان! ربات رو شکست دادی!';
+      celebrate();
+    } else if (result.mark === 'O') {
+      scores.losses++;
+      resultArt.innerHTML = '<span class="robot" aria-label="ربات">🤖</span><div class="lose-stamp">YOU LOSE</div>';
+      resultTitle.textContent = 'ربات برنده شد!';
+      resultText.textContent = 'این دور مال ربات شد؛ دوباره امتحان کن!';
+    } else {
+      scores.draws++;
+      resultArt.innerHTML = '<span class="draw-icon">🤝</span>';
+      resultTitle.textContent = 'مساوی شد!';
+      resultText.textContent = 'هیچ‌کدومتون برنده نشدید. یک دور دیگه؟';
+    }
+    updateScores();
+    statusEl.textContent = result.mark === 'X' ? 'تو برنده شدی! 🏆' : result.mark === 'O' ? 'ربات این دور رو برد.' : 'بازی مساوی شد.';
+    window.setTimeout(() => overlay.classList.add('show'), 180);
+  }
+  function celebrate() {
+    starsEl.innerHTML = '';
+    for (let i=0;i<42;i++) {
+      const star = document.createElement('span');
+      star.className = 'star';
+      star.textContent = ['★','✦','⭐'][i%3];
+      star.style.left = Math.random()*100 + '%';
+      star.style.animationDelay = Math.random()*1.1 + 's';
+      star.style.fontSize = (14+Math.random()*18) + 'px';
+      starsEl.appendChild(star);
+    }
+    window.setTimeout(() => { starsEl.innerHTML = ''; }, 3800);
+  }
+  function winningMove(b, mark) {
+    for (let i=0;i<9;i++) if (!b[i]) {
+      const test = b.slice(); test[i] = mark;
+      if (winner(test)?.mark === mark) return i;
+    }
+    return -1;
+  }
+  function chooseMove() {
+    const empty = board.map((v,i)=>v ? -1 : i).filter(i=>i>=0);
+    if (level === 'easy') return empty[Math.floor(Math.random()*empty.length)];
+    const win = winningMove(board,'O');
+    if (win >= 0) return win;
+    const block = winningMove(board,'X');
+    if (block >= 0 && (level === 'hard' || Math.random() < .75)) return block;
+    if (level === 'hard') {
+      if (!board[4]) return 4;
+      const corners = [0,2,6,8].filter(i=>!board[i]);
+      if (corners.length) return corners[Math.floor(Math.random()*corners.length)];
+      return empty[Math.floor(Math.random()*empty.length)];
+    }
+    if (!board[4] && Math.random() < .65) return 4;
+    return empty[Math.floor(Math.random()*empty.length)];
+  }
+  function robotTurn() {
+    if (finished) return;
+    const move = chooseMove();
+    if (move === undefined) return;
+    board[move] = 'O';
+    const result = winner(board);
+    render();
+    if (result) { endGame(result); return; }
+    busy = false;
+    statusEl.textContent = 'نوبت توئه! X رو انتخاب کن.';
+    render();
+  }
+  function playerTurn(i) {
+    if (busy || finished || board[i]) return;
+    board[i] = 'X';
+    const result = winner(board);
+    render();
+    if (result) { endGame(result); return; }
+    busy = true;
+    statusEl.textContent = 'ربات داره فکر می‌کنه... 🤖';
+    render();
+    window.setTimeout(robotTurn, 430);
+  }
+  function restart() {
+    board = Array(9).fill('');
+    busy = false;
+    finished = false;
+    overlay.classList.remove('show');
+    starsEl.innerHTML = '';
+    statusEl.textContent = 'نوبت توئه! تو با X بازی می‌کنی.';
+    render();
+  }
+  cells.forEach((cell,i)=>cell.addEventListener('click',()=>playerTurn(i)));
+  document.querySelectorAll('.level').forEach(button=>button.addEventListener('click',()=>{
+    document.querySelectorAll('.level').forEach(b=>b.classList.remove('active'));
+    button.classList.add('active');
+    level = button.dataset.level;
+    restart();
+    statusEl.textContent = 'درجه سختی تغییر کرد؛ نوبت توئه!';
+  }));
+  document.getElementById('restart').addEventListener('click',restart);
+  document.getElementById('again').addEventListener('click',restart);
+  document.getElementById('resetScores').addEventListener('click',()=>{
+    scores = {wins:0,losses:0,draws:0};
+    updateScores();
+    restart();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
