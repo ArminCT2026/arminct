@@ -59,6 +59,51 @@
       color: #35aaff;
       text-decoration: none;
     }
+/* Victory Animation */
+
+@keyframes victory {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.win-animation {
+  animation: victory 0.6s ease;
+  color: #35ff8a !important;
+  text-shadow: 0 0 15px #35ff8a;
+}
+
+@keyframes celebration {
+  0% {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-100px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: fixed;
+  top: 70%;
+  font-size: 25px;
+  pointer-events: none;
+  animation: celebration 1.5s ease-out forwards;
+  z-index: 999;
+}
   </style>
 </head>
 
@@ -87,56 +132,76 @@
     <a href="index.html">⬅ بازگشت به صفحه اصلی</a>
   </div>
 
-  <script>
-    let playerScore = 0;
-    let computerScore = 0;
+<script>
+let playerScore = 0;
+let computerScore = 0;
 
-    function play(player) {
-      const options = ['سنگ', 'کاغذ', 'قیچی'];
+function play(player) {
+  const options = ['سنگ', 'کاغذ', 'قیچی'];
 
-      const computer =
-        options[Math.floor(Math.random() * 3)];
+  const computer = options[Math.floor(Math.random() * 3)];
 
-      document.getElementById('computer').innerText =
-        'انتخاب کامپیوتر: ' + computer;
+  document.getElementById('computer').innerText =
+    'انتخاب کامپیوتر: ' + computer;
 
-      let result = '';
+  let result = '';
 
-      if (player === computer) {
-        result = 'مساوی شدیم! 😐';
-      } else if (
-        (player === 'سنگ' && computer === 'قیچی') ||
-        (player === 'کاغذ' && computer === 'سنگ') ||
-        (player === 'قیچی' && computer === 'کاغذ')
-      ) {
-        result = 'تو برنده شدی! 🏆';
-        playerScore++;
-      } else {
-        result = 'کامپیوتر برنده شد! 🤖';
-        computerScore++;
-      }
+  if (player === computer) {
+    result = 'مساوی شدیم! 😐';
+  } 
+  else if (
+    (player === 'سنگ' && computer === 'قیچی') ||
+    (player === 'کاغذ' && computer === 'سنگ') ||
+    (player === 'قیچی' && computer === 'کاغذ')
+  ) {
+    result = 'تو برنده شدی! 🏆';
+    playerScore++;
+  } 
+  else {
+    result = 'کامپیوتر برنده شد! 🤖';
+    computerScore++;
+  }
 
-      document.getElementById('result').innerText = result;
+  const resultBox = document.getElementById('result');
 
-      document.getElementById('score').innerText =
-        'تو: ' + playerScore +
-        ' | کامپیوتر: ' + computerScore;
+  resultBox.innerText = result;
+  resultBox.classList.remove('win-animation');
+
+  if (result === 'تو برنده شدی! 🏆') {
+    void resultBox.offsetWidth;
+    resultBox.classList.add('win-animation');
+
+    for (let i = 0; i < 25; i++) {
+      const particle = document.createElement('div');
+
+      particle.className = 'confetti';
+      particle.innerText = '🎉';
+      particle.style.left = Math.random() * 100 + 'vw';
+
+      document.body.appendChild(particle);
+
+      setTimeout(() => particle.remove(), 1500);
     }
+  }
 
-    function resetGame() {
-      playerScore = 0;
-      computerScore = 0;
+  document.getElementById('score').innerText =
+    'تو: ' + playerScore +
+    ' | کامپیوتر: ' + computerScore;
+}
 
-      document.getElementById('computer').innerText =
-        'انتخاب کامپیوتر: ؟';
+function resetGame() {
+  playerScore = 0;
+  computerScore = 0;
 
-      document.getElementById('result').innerText =
-        'منتظر انتخاب تو هستم!';
+  document.getElementById('computer').innerText =
+    'انتخاب کامپیوتر: ؟';
 
-      document.getElementById('score').innerText =
-        'تو: ۰ | کامپیوتر: ۰';
-    }
-  </script>
+  document.getElementById('result').innerText =
+    'منتظر انتخاب تو هستم!';
 
-</body>
-</html>
+  document.getElementById('result').classList.remove('win-animation');
+
+  document.getElementById('score').innerText =
+    'تو: ۰ | کامپیوتر: ۰';
+}
+</script>
