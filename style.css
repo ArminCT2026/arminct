@@ -89,3 +89,42 @@ body, body * {
                 color 0.3s ease,
                 border-color 0.3s ease;
 }
+#welcome {
+  text-align: center;
+  padding: 60px 20px;
+  margin: 40px auto;
+  max-width: 800px;
+  border: 1px solid #168cff;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #101d3a, #071126);
+  box-shadow: 0 0 25px rgba(22, 140, 255, 0.2);
+}
+
+#welcome h2 {
+  color: #35aaff;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+#welcome p {
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 2;
+}
+
+#welcome button {
+  background: #168cff;
+  color: white;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: 0.3s;
+}
+
+#welcome button:hover {
+  background: #0066cc;
+  transform: scale(1.05);
+}
