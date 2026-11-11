@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors | Armin CT</title>
+
+  <style>
+    body {
+      background: #071126;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    .game {
+      max-width: 550px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      border: 1px solid #168cff;
+      border-radius: 20px;
+      background: #101d3a;
+    }
+
+    h1 {
+      color: #35aaff;
+    }
+
+    .choices {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+
+    button {
+      background: #168cff;
+      color: white;
+      border: none;
+      padding: 15px 22px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0066cc;
+    }
+
+    #result {
+      font-size: 22px;
+      margin: 25px 0;
+      color: #35aaff;
+    }
+
+    a {
+      color: #35aaff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="game">
+    <h1>🪨 سنگ، کاغذ، قیچی ✂️</h1>
+
+    <p>یکی از گزینه‌ها رو انتخاب کن و با کامپیوتر رقابت کن!</p>
+
+    <div class="choices">
+      <button onclick="play('سنگ')">🪨 سنگ</button>
+      <button onclick="play('کاغذ')">📄 کاغذ</button>
+      <button onclick="play('قیچی')">✂️ قیچی</button>
+    </div>
+
+    <h3 id="computer">انتخاب کامپیوتر: ؟</h3>
+
+    <div id="result">منتظر انتخاب تو هستم!</div>
+
+    <h3 id="score">تو: ۰ | کامپیوتر: ۰</h3>
+
+    <button onclick="resetGame()">شروع دوباره</button>
+
+    <br><br>
+    <a href="index.html">⬅ بازگشت به صفحه اصلی</a>
+  </div>
+
+  <script>
+    let playerScore = 0;
+    let computerScore = 0;
+
+    function play(player) {
+      const options = ['سنگ', 'کاغذ', 'قیچی'];
+
+      const computer =
+        options[Math.floor(Math.random() * 3)];
+
+      document.getElementById('computer').innerText =
+        'انتخاب کامپیوتر: ' + computer;
+
+      let result = '';
+
+      if (player === computer) {
+        result = 'مساوی شدیم! 😐';
+      } else if (
+        (player === 'سنگ' && computer === 'قیچی') ||
+        (player === 'کاغذ' && computer === 'سنگ') ||
+        (player === 'قیچی' && computer === 'کاغذ')
+      ) {
+        result = 'تو برنده شدی! 🏆';
+        playerScore++;
+      } else {
+        result = 'کامپیوتر برنده شد! 🤖';
+        computerScore++;
+      }
+
+      document.getElementById('result').innerText = result;
+
+      document.getElementById('score').innerText =
+        'تو: ' + playerScore +
+        ' | کامپیوتر: ' + computerScore;
+    }
+
+    function resetGame() {
+      playerScore = 0;
+      computerScore = 0;
+
+      document.getElementById('computer').innerText =
+        'انتخاب کامپیوتر: ؟';
+
+      document.getElementById('result').innerText =
+        'منتظر انتخاب تو هستم!';
+
+      document.getElementById('score').innerText =
+        'تو: ۰ | کامپیوتر: ۰';
+    }
+  </script>
+
+</body>
+</html>
